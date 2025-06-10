@@ -1,0 +1,58 @@
+{"command":"git status","timestamp":"2025-06-10T09:42:42.574055472Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048482_1749548562"}
+{"command":"cargo build --release","timestamp":"2025-06-10T09:42:42.575109180Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048484_1749548562"}
+{"command":"ls -la","timestamp":"2025-06-10T09:42:42.576053909Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048485_1749548562"}
+{"command":"git log --oneline","timestamp":"2025-06-10T09:42:42.576920048Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048486_1749548562"}
+{"command":"cargo test","timestamp":"2025-06-10T09:42:42.577771959Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048487_1749548562"}
+{"command":"git diff","timestamp":"2025-06-10T09:42:42.578572249Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048488_1749548562"}
+{"command":"cargo clippy","timestamp":"2025-06-10T09:42:42.579395820Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048489_1749548562"}
+{"command":"git add .","timestamp":"2025-06-10T09:42:42.580180031Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048490_1749548562"}
+{"command":"vim src/main.rs","timestamp":"2025-06-10T09:42:42.581170689Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048491_1749548562"}
+{"command":"find . -name '*.rs'","timestamp":"2025-06-10T09:42:42.581981370Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048492_1749548562"}
+{"command":"rustc --version","timestamp":"2025-06-10T09:42:42.584887396Z","directory":"/home/connor/Projects/rehash/examples/test_data/src","exit_code":0,"session_id":"4048494_1749548562"}
+{"command":"cargo fmt","timestamp":"2025-06-10T09:42:42.585664627Z","directory":"/home/connor/Projects/rehash/examples/test_data/src","exit_code":0,"session_id":"4048495_1749548562"}
+{"command":"grep -r 'TODO' .","timestamp":"2025-06-10T09:42:42.586606636Z","directory":"/home/connor/Projects/rehash/examples/test_data/src","exit_code":0,"session_id":"4048496_1749548562"}
+{"command":"wc -l *.rs","timestamp":"2025-06-10T09:42:42.587562435Z","directory":"/home/connor/Projects/rehash/examples/test_data/src","exit_code":1,"session_id":"4048497_1749548562"}
+{"command":"git blame main.rs","timestamp":"2025-06-10T09:42:42.588425995Z","directory":"/home/connor/Projects/rehash/examples/test_data/src","exit_code":0,"session_id":"4048498_1749548562"}
+{"command":"vim lib.rs","timestamp":"2025-06-10T09:42:42.589398613Z","directory":"/home/connor/Projects/rehash/examples/test_data/src","exit_code":0,"session_id":"4048499_1749548562"}
+{"command":"ls -la *.rs","timestamp":"2025-06-10T09:42:42.590311513Z","directory":"/home/connor/Projects/rehash/examples/test_data/src","exit_code":0,"session_id":"4048500_1749548562"}
+{"command":"mdbook build","timestamp":"2025-06-10T09:42:42.591187003Z","directory":"/home/connor/Projects/rehash/examples/test_data/docs","exit_code":0,"session_id":"4048501_1749548562"}
+{"command":"pandoc README.md -o readme.pdf","timestamp":"2025-06-10T09:42:42.591988313Z","directory":"/home/connor/Projects/rehash/examples/test_data/docs","exit_code":1,"session_id":"4048502_1749548562"}
+{"command":"spell check *.md","timestamp":"2025-06-10T09:42:42.592978802Z","directory":"/home/connor/Projects/rehash/examples/test_data/docs","exit_code":0,"session_id":"4048503_1749548562"}
+{"command":"find . -name '*.md'","timestamp":"2025-06-10T09:42:42.593782842Z","directory":"/home/connor/Projects/rehash/examples/test_data/docs","exit_code":0,"session_id":"4048504_1749548562"}
+{"command":"grep -i 'FIXME' *.md","timestamp":"2025-06-10T09:42:42.594556733Z","directory":"/home/connor/Projects/rehash/examples/test_data/docs","exit_code":1,"session_id":"4048505_1749548562"}
+{"command":"vim architecture.md","timestamp":"2025-06-10T09:42:42.595499403Z","directory":"/home/connor/Projects/rehash/examples/test_data/docs","exit_code":0,"session_id":"4048506_1749548562"}
+{"command":"chmod +x deploy.sh","timestamp":"2025-06-10T09:42:42.596350923Z","directory":"/home/connor/Projects/rehash/examples/test_data/scripts","exit_code":0,"session_id":"4048507_1749548562"}
+{"command":"./deploy.sh --dry-run","timestamp":"2025-06-10T09:42:42.597163683Z","directory":"/home/connor/Projects/rehash/examples/test_data/scripts","exit_code":0,"session_id":"4048508_1749548562"}
+{"command":"shellcheck *.sh","timestamp":"2025-06-10T09:42:42.598065963Z","directory":"/home/connor/Projects/rehash/examples/test_data/scripts","exit_code":0,"session_id":"4048509_1749548562"}
+{"command":"bash -n setup.sh","timestamp":"2025-06-10T09:42:42.598931863Z","directory":"/home/connor/Projects/rehash/examples/test_data/scripts","exit_code":0,"session_id":"4048510_1749548562"}
+{"command":"find . -name '*.sh' -exec chmod +x {} \\;","timestamp":"2025-06-10T09:42:42.599772573Z","directory":"/home/connor/Projects/rehash/examples/test_data/scripts","exit_code":0,"session_id":"4048511_1749548562"}
+{"command":"docker build -t myapp .","timestamp":"2025-06-10T09:42:42.600598203Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048512_1749548562"}
+{"command":"docker run --rm myapp","timestamp":"2025-06-10T09:42:42.601505343Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048513_1749548562"}
+{"command":"npm install","timestamp":"2025-06-10T09:42:42.602437212Z","directory":"/home/connor/Projects/rehash/examples","exit_code":1,"session_id":"4048514_1749548562"}
+{"command":"python3 -m venv venv","timestamp":"2025-06-10T09:42:42.603351411Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048515_1749548562"}
+{"command":"source venv/bin/activate","timestamp":"2025-06-10T09:42:42.604177942Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048516_1749548562"}
+{"command":"pip install requests","timestamp":"2025-06-10T09:42:42.605038662Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048517_1749548562"}
+{"command":"pytest tests/","timestamp":"2025-06-10T09:42:42.605957381Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048518_1749548562"}
+{"command":"black *.py","timestamp":"2025-06-10T09:42:42.606877490Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048519_1749548562"}
+{"command":"flake8 src/","timestamp":"2025-06-10T09:42:42.607874239Z","directory":"/home/connor/Projects/rehash/examples","exit_code":1,"session_id":"4048520_1749548562"}
+{"command":"make clean","timestamp":"2025-06-10T09:42:42.608835248Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048521_1749548562"}
+{"command":"make install","timestamp":"2025-06-10T09:42:42.609660268Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048522_1749548562"}
+{"command":"htop","timestamp":"2025-06-10T09:42:42.610481178Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048523_1749548562"}
+{"command":"ps aux | grep rust","timestamp":"2025-06-10T09:42:42.611529286Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048524_1749548562"}
+{"command":"df -h","timestamp":"2025-06-10T09:42:42.612410376Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048525_1749548562"}
+{"command":"free -m","timestamp":"2025-06-10T09:42:42.613264906Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048526_1749548562"}
+{"command":"journalctl -f","timestamp":"2025-06-10T09:42:42.614170596Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048527_1749548562"}
+{"command":"systemctl status nginx","timestamp":"2025-06-10T09:42:42.614960436Z","directory":"/home/connor/Projects/rehash/examples","exit_code":1,"session_id":"4048528_1749548562"}
+{"command":"curl -s https://api.github.com/user","timestamp":"2025-06-10T09:42:42.615764447Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048529_1749548562"}
+{"command":"wget https://example.com/file.tar.gz","timestamp":"2025-06-10T09:42:42.616541878Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048530_1749548562"}
+{"command":"tar -xzf file.tar.gz","timestamp":"2025-06-10T09:42:42.617472717Z","directory":"/home/connor/Projects/rehash/examples","exit_code":0,"session_id":"4048531_1749548562"}
+{"command":"nix develop","timestamp":"2024-12-01T10:30:00Z","directory":"/home/connor/Projects/rehash","exit_code":0,"session_id":"11111_1705316200"}
+{"command":"cargo run","timestamp":"2024-12-01T10:31:00Z","directory":"/home/connor/Projects/rehash","exit_code":0,"session_id":"11111_1705316200"}
+{"command":"git commit -m 'fix bug'","timestamp":"2024-12-01T10:32:00Z","directory":"/home/connor/Projects/rehash","exit_code":0,"session_id":"11111_1705316200"}
+{"command":"cd test_data/src","timestamp":"2024-12-01T10:33:00Z","directory":"/home/connor/Projects/rehash","exit_code":0,"session_id":"11111_1705316200"}
+{"command":"rustfmt *.rs","timestamp":"2024-12-01T10:34:00Z","directory":"/home/connor/Projects/rehash/test_data/src","exit_code":0,"session_id":"11111_1705316200"}
+{"command":"ssh user@server","timestamp":"2024-12-05T11:00:00Z","directory":"/home/connor/Projects/rehash","exit_code":0,"session_id":"22222_1705318800"}
+{"command":"tmux new-session -d","timestamp":"2024-12-05T11:01:00Z","directory":"/home/connor/Projects/rehash","exit_code":0,"session_id":"22222_1705318800"}
+{"command":"docker ps -a","timestamp":"2024-12-10T14:15:00Z","directory":"/home/connor/Projects/rehash","exit_code":0,"session_id":"33333_1705320000"}
+{"command":"kubectl get pods","timestamp":"2024-12-15T09:20:00Z","directory":"/home/connor/Projects/rehash","exit_code":0,"session_id":"33333_1705320000"}
+{"command":"vim README.md","timestamp":"2025-01-01T16:45:00Z","directory":"/home/connor/Projects/rehash","exit_code":0,"session_id":"44444_1705400000"}
