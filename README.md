@@ -28,17 +28,6 @@ cargo build --release
 cp target/release/rehash ~/.local/bin/
 ```
 
-### Manual Build
-
-```bash
-# Install Rust if not already installed
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-# Build rehash
-cargo build --release
-cp target/release/rehash ~/.local/bin/
-```
-
 ## Shell Integration
 
 ### Bash

@@ -46,11 +46,10 @@ impl HistoryManager {
             .to_string_lossy()
             .to_string();
         
-        // AIDEV-NOTE: session-id uses PID+timestamp for uniqueness across shells
-        let session_id = format!("{}_{}", 
-            std::process::id(), 
-            Utc::now().timestamp()
-        );
+        // AIDEV-NOTE: use environment session ID if available, otherwise generate one
+        let session_id = env::var("REHASH_SESSION_ID").unwrap_or_else(|_| {
+            format!("{}_{}", std::process::id(), Utc::now().timestamp())
+        });
 
         Ok(Self {
             storage: Storage::new(database_path)?,

@@ -1,6 +1,12 @@
 #!/bin/zsh
 # Rehash shell integration for Zsh
 
+# Generate a session ID that persists for this shell session
+if [[ -z "$REHASH_SESSION_ID" ]]; then
+    # Use the terminal's PID instead of shell PID for consistency across shell changes
+    export REHASH_SESSION_ID="$(ps -o ppid= -p $$ | tr -d ' ')_$(date +%s)"
+fi
+
 # AIDEV-NOTE: capture command before execution
 _rehash_preexec() {
     _REHASH_LAST_COMMAND="$1"
@@ -9,9 +15,19 @@ _rehash_preexec() {
 # AIDEV-NOTE: capture exit code and log command after execution  
 _rehash_precmd() {
     local exit_code=$?
+    
+    # Skip during shell initialization
+    if [[ -z "$_REHASH_INITIALIZED" ]]; then
+        _REHASH_INITIALIZED=1
+        return
+    fi
+    
     if [[ -n "$_REHASH_LAST_COMMAND" ]]; then
-        # Skip rehash commands to avoid recursion
-        if [[ "$_REHASH_LAST_COMMAND" != rehash* ]]; then
+        # Skip problematic commands
+        if [[ "$_REHASH_LAST_COMMAND" != rehash* && 
+              "$_REHASH_LAST_COMMAND" != "'" && 
+              "$_REHASH_LAST_COMMAND" != '"' && 
+              ${#_REHASH_LAST_COMMAND} -gt 1 ]]; then
             rehash add "$_REHASH_LAST_COMMAND" --exit-code "$exit_code" 2>/dev/null || true
         fi
         unset _REHASH_LAST_COMMAND
@@ -24,9 +40,9 @@ _rehash_search_widget() {
     # Get current command line as prefix
     local current_command="$BUFFER"
     if [[ -n "$current_command" ]]; then
-        selected=$(rehash interactive --scope global --prefix "$current_command" 2>/dev/null)
+        selected=$(rehash interactive --scope global --prefix "$current_command" </dev/tty >/dev/tty 2>&1)
     else
-        selected=$(rehash interactive --scope global 2>/dev/null)
+        selected=$(rehash interactive --scope global </dev/tty >/dev/tty 2>&1)
     fi
     if [[ -n "$selected" ]]; then
         LBUFFER="$selected"
@@ -40,9 +56,9 @@ _rehash_search_local_widget() {
     # Get current command line as prefix
     local current_command="$BUFFER"
     if [[ -n "$current_command" ]]; then
-        selected=$(rehash interactive --scope local --prefix "$current_command" 2>/dev/null)
+        selected=$(rehash interactive --scope local --prefix "$current_command" </dev/tty >/dev/tty 2>&1)
     else
-        selected=$(rehash interactive --scope local 2>/dev/null)
+        selected=$(rehash interactive --scope local </dev/tty >/dev/tty 2>&1)
     fi
     if [[ -n "$selected" ]]; then
         LBUFFER="$selected"
@@ -56,9 +72,9 @@ _rehash_search_session_widget() {
     # Get current command line as prefix
     local current_command="$BUFFER"
     if [[ -n "$current_command" ]]; then
-        selected=$(rehash interactive --scope session --prefix "$current_command" 2>/dev/null)
+        selected=$(rehash interactive --scope session --prefix "$current_command" </dev/tty >/dev/tty 2>&1)
     else
-        selected=$(rehash interactive --scope session 2>/dev/null)
+        selected=$(rehash interactive --scope session </dev/tty >/dev/tty 2>&1)
     fi
     if [[ -n "$selected" ]]; then
         LBUFFER="$selected"
