@@ -39,10 +39,20 @@ _rehash_search_widget() {
     local selected
     # Get current command line as prefix
     local current_command="$BUFFER"
+    # Use temp file to capture result
+    local temp_file="/tmp/rehash_result_$$"
+    
+    # Run rehash interactively - let it take control of terminal
     if [[ -n "$current_command" ]]; then
-        selected=$(rehash interactive --scope global --prefix "$current_command" </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope global --prefix "$current_command" --output-file "$temp_file"
     else
-        selected=$(rehash interactive --scope global </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope global --output-file "$temp_file"
+    fi
+    
+    # Read result from temp file
+    if [[ -f "$temp_file" ]]; then
+        selected=$(cat "$temp_file")
+        rm -f "$temp_file"
     fi
     if [[ -n "$selected" ]]; then
         LBUFFER="$selected"
@@ -55,10 +65,20 @@ _rehash_search_local_widget() {
     local selected
     # Get current command line as prefix
     local current_command="$BUFFER"
+    # Use temp file to capture result
+    local temp_file="/tmp/rehash_result_$$"
+    
+    # Run rehash interactively - let it take control of terminal
     if [[ -n "$current_command" ]]; then
-        selected=$(rehash interactive --scope local --prefix "$current_command" </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope local --prefix "$current_command" --output-file "$temp_file"
     else
-        selected=$(rehash interactive --scope local </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope local --output-file "$temp_file"
+    fi
+    
+    # Read result from temp file
+    if [[ -f "$temp_file" ]]; then
+        selected=$(cat "$temp_file")
+        rm -f "$temp_file"
     fi
     if [[ -n "$selected" ]]; then
         LBUFFER="$selected"
@@ -71,10 +91,20 @@ _rehash_search_session_widget() {
     local selected
     # Get current command line as prefix
     local current_command="$BUFFER"
+    # Use temp file to capture result
+    local temp_file="/tmp/rehash_result_$$"
+    
+    # Run rehash interactively - let it take control of terminal
     if [[ -n "$current_command" ]]; then
-        selected=$(rehash interactive --scope session --prefix "$current_command" </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope session --prefix "$current_command" --output-file "$temp_file"
     else
-        selected=$(rehash interactive --scope session </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope session --output-file "$temp_file"
+    fi
+    
+    # Read result from temp file
+    if [[ -f "$temp_file" ]]; then
+        selected=$(cat "$temp_file")
+        rm -f "$temp_file"
     fi
     if [[ -n "$selected" ]]; then
         LBUFFER="$selected"

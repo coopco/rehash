@@ -7,27 +7,22 @@ if [[ -z "$REHASH_SESSION_ID" ]]; then
     export REHASH_SESSION_ID="$(ps -o ppid= -p $$ | tr -d ' ')_$(date +%s)"
 fi
 
-# AIDEV-NOTE: capture command using history
+# AIDEV-NOTE: capture command before execution using DEBUG trap
+_rehash_preexec() {
+    if [[ -n "$BASH_COMMAND" && "$BASH_COMMAND" != "_rehash_preexec" ]]; then
+        _REHASH_LAST_COMMAND="$BASH_COMMAND"
+    fi
+}
+
+# AIDEV-NOTE: capture exit code and log command after execution
 _rehash_precmd() {
     local exit_code=$?
-    
-    # Skip during shell initialization
-    if [[ -z "$_REHASH_INITIALIZED" ]]; then
-        _REHASH_INITIALIZED=1
-        return
-    fi
-    
-    # Get the last command from history
-    local last_cmd=$(history 1 | sed 's/^ *[0-9]* *//')
-    
-    # Skip problematic commands
-    if [[ -n "$last_cmd" && 
-          "$last_cmd" != rehash* && 
-          "$last_cmd" != "_rehash_precmd" &&
-          "$last_cmd" != "'" &&
-          "$last_cmd" != '"' &&
-          ${#last_cmd} -gt 1 ]]; then
-        rehash add "$last_cmd" --exit-code "$exit_code" 2>/dev/null || true
+    if [[ -n "$_REHASH_LAST_COMMAND" ]]; then
+        # Skip rehash commands to avoid recursion
+        if [[ "$_REHASH_LAST_COMMAND" != rehash* ]]; then
+            rehash add "$_REHASH_LAST_COMMAND" --exit-code "$exit_code" 2>/dev/null || true
+        fi
+        unset _REHASH_LAST_COMMAND
     fi
 }
 
@@ -36,10 +31,20 @@ _rehash_search() {
     local selected
     # Get current command line as prefix
     local current_command="${READLINE_LINE}"
+    # Use temp file to capture result
+    local temp_file="/tmp/rehash_result_$$"
+    
+    # Run rehash interactively - let it take control of terminal
     if [[ -n "$current_command" ]]; then
-        selected=$(rehash interactive --scope global --prefix "$current_command" </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope global --prefix "$current_command" --output-file "$temp_file"
     else
-        selected=$(rehash interactive --scope global </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope global --output-file "$temp_file"
+    fi
+    
+    # Read result from temp file
+    if [[ -f "$temp_file" ]]; then
+        selected=$(cat "$temp_file")
+        rm -f "$temp_file"
     fi
     if [[ -n "$selected" ]]; then
         READLINE_LINE="$selected"
@@ -52,10 +57,20 @@ _rehash_search_local() {
     local selected
     # Get current command line as prefix
     local current_command="${READLINE_LINE}"
+    # Use temp file to capture result
+    local temp_file="/tmp/rehash_result_$$"
+    
+    # Run rehash interactively - let it take control of terminal
     if [[ -n "$current_command" ]]; then
-        selected=$(rehash interactive --scope local --prefix "$current_command" </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope local --prefix "$current_command" --output-file "$temp_file"
     else
-        selected=$(rehash interactive --scope local </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope local --output-file "$temp_file"
+    fi
+    
+    # Read result from temp file
+    if [[ -f "$temp_file" ]]; then
+        selected=$(cat "$temp_file")
+        rm -f "$temp_file"
     fi
     if [[ -n "$selected" ]]; then
         READLINE_LINE="$selected"
@@ -68,10 +83,20 @@ _rehash_search_session() {
     local selected
     # Get current command line as prefix
     local current_command="${READLINE_LINE}"
+    # Use temp file to capture result
+    local temp_file="/tmp/rehash_result_$$"
+    
+    # Run rehash interactively - let it take control of terminal
     if [[ -n "$current_command" ]]; then
-        selected=$(rehash interactive --scope session --prefix "$current_command" </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope session --prefix "$current_command" --output-file "$temp_file"
     else
-        selected=$(rehash interactive --scope session </dev/tty >/dev/tty 2>&1)
+        rehash interactive --scope session --output-file "$temp_file"
+    fi
+    
+    # Read result from temp file
+    if [[ -f "$temp_file" ]]; then
+        selected=$(cat "$temp_file")
+        rm -f "$temp_file"
     fi
     if [[ -n "$selected" ]]; then
         READLINE_LINE="$selected"
@@ -81,7 +106,10 @@ _rehash_search_session() {
 
 # Set up hooks
 if [[ "$BASH_VERSION" ]]; then
-    # Use PROMPT_COMMAND for capturing commands from history
+    # Use DEBUG trap for preexec functionality
+    trap '_rehash_preexec' DEBUG
+    
+    # Use PROMPT_COMMAND for precmd functionality
     if [[ -z "$PROMPT_COMMAND" ]]; then
         PROMPT_COMMAND="_rehash_precmd"
     else
@@ -95,4 +123,4 @@ if [[ "$BASH_VERSION" ]]; then
 fi
 
 # Export functions for subshells
-export -f _rehash_precmd _rehash_search _rehash_search_local _rehash_search_session
+export -f _rehash_preexec _rehash_precmd _rehash_search _rehash_search_local _rehash_search_session

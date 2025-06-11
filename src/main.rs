@@ -47,6 +47,9 @@ enum Commands {
         /// Prefill the search query with this text
         #[arg(short, long)]
         prefix: Option<String>,
+        /// Write result to file instead of stdout (for shell integration)
+        #[arg(long)]
+        output_file: Option<String>,
     },
     /// Show statistics
     Stats,
@@ -77,9 +80,13 @@ fn main() -> Result<()> {
                 println!("{}", entry.command);
             }
         }
-        Some(Commands::Interactive { scope, prefix }) => {
+        Some(Commands::Interactive { scope, prefix, output_file }) => {
             if let Some(selected) = history_manager.interactive_search_with_prefix(scope, prefix)? {
-                println!("{}", selected);
+                if let Some(file_path) = output_file {
+                    std::fs::write(file_path, selected)?;
+                } else {
+                    print!("{}", selected);
+                }
             }
         }
         Some(Commands::Stats) => {
