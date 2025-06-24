@@ -7,12 +7,13 @@ use std::path::PathBuf;
 use crate::history::HistoryEntry;
 
 pub struct Storage {
-    history_file: PathBuf,
+    primary_file: PathBuf,
+    read_sources: Vec<PathBuf>,
 }
 
 impl Storage {
-    pub fn new(custom_path: Option<String>) -> Result<Self> {
-        let history_file = if let Some(path) = custom_path {
+    pub fn new(custom_path: Option<String>, additional_read_sources: Vec<String>) -> Result<Self> {
+        let primary_file = if let Some(path) = custom_path {
             PathBuf::from(path)
         } else {
             let mut default_path = dirs::data_dir()
@@ -25,18 +26,24 @@ impl Storage {
         };
 
         // Ensure parent directory exists for custom paths
-        if let Some(parent) = history_file.parent() {
+        if let Some(parent) = primary_file.parent() {
             std::fs::create_dir_all(parent)?;
         }
 
-        Ok(Self { history_file })
+        // Build read sources: start with primary file, then add additional sources
+        let mut read_sources = vec![primary_file.clone()];
+        for source in additional_read_sources {
+            read_sources.push(PathBuf::from(source));
+        }
+
+        Ok(Self { primary_file, read_sources })
     }
 
     pub fn add_entry(&self, entry: HistoryEntry) -> Result<()> {
         let mut file = OpenOptions::new()
             .create(true)
             .append(true)
-            .open(&self.history_file)?;
+            .open(&self.primary_file)?;
 
         let json_line = serde_json::to_string(&entry)?;
         writeln!(file, "{}", json_line)?;
@@ -65,39 +72,57 @@ impl Storage {
     where
         F: Fn(&HistoryEntry) -> bool,
     {
-        if !self.history_file.exists() {
-            return Ok(Vec::new());
-        }
+        let mut all_entries = Vec::new();
 
-        let file = File::open(&self.history_file)?;
-        let reader = BufReader::new(file);
-        let mut entries = Vec::new();
-
-        for line in reader.lines() {
-            let line = line?;
-            if line.trim().is_empty() {
-                continue;
+        // Read from all sources
+        for source_file in &self.read_sources {
+            if !source_file.exists() {
+                continue; // Skip missing files
             }
 
-            match serde_json::from_str::<HistoryEntry>(&line) {
-                Ok(entry) => {
-                    if filter(&entry) {
-                        entries.push(entry);
+            match File::open(source_file) {
+                Ok(file) => {
+                    let reader = BufReader::new(file);
+                    
+                    for line in reader.lines() {
+                        let line = match line {
+                            Ok(l) => l,
+                            Err(_) => continue, // Skip read errors
+                        };
+                        
+                        if line.trim().is_empty() {
+                            continue;
+                        }
+
+                        match serde_json::from_str::<HistoryEntry>(&line) {
+                            Ok(entry) => {
+                                if filter(&entry) {
+                                    all_entries.push(entry);
+                                }
+                            }
+                            Err(_) => {
+                                // AIDEV-NOTE: skip malformed lines instead of failing
+                                continue;
+                            }
+                        }
                     }
                 }
                 Err(_) => {
-                    // AIDEV-NOTE: skip malformed lines instead of failing
+                    // AIDEV-NOTE: skip files that can't be opened
                     continue;
                 }
             }
         }
 
-        Ok(entries)
+        // Sort by timestamp to maintain chronological order
+        all_entries.sort_by(|a, b| a.timestamp.cmp(&b.timestamp));
+
+        Ok(all_entries)
     }
 
     pub fn clear_all_history(&self) -> Result<()> {
-        if self.history_file.exists() {
-            std::fs::remove_file(&self.history_file)?;
+        if self.primary_file.exists() {
+            std::fs::remove_file(&self.primary_file)?;
         }
         Ok(())
     }

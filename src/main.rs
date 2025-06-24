@@ -16,6 +16,9 @@ struct Args {
     /// Path to the history database file
     #[arg(long, global = true)]
     database: Option<String>,
+    /// Additional read-only database files (comma-separated)
+    #[arg(long, global = true, value_delimiter = ',')]
+    read_sources: Vec<String>,
 }
 
 #[derive(Subcommand)]
@@ -63,7 +66,7 @@ enum Commands {
 
 fn main() -> Result<()> {
     let args = Args::parse();
-    let mut history_manager = HistoryManager::new(args.database)?;
+    let mut history_manager = HistoryManager::new(args.database, args.read_sources)?;
 
     match args.command {
         Some(Commands::Add { command, exit_code }) => {

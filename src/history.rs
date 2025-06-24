@@ -41,7 +41,7 @@ pub struct HistoryManager {
 }
 
 impl HistoryManager {
-    pub fn new(database_path: Option<String>) -> Result<Self> {
+    pub fn new(database_path: Option<String>, read_sources: Vec<String>) -> Result<Self> {
         let current_dir = env::current_dir()?
             .to_string_lossy()
             .to_string();
@@ -52,7 +52,7 @@ impl HistoryManager {
         });
 
         Ok(Self {
-            storage: Storage::new(database_path)?,
+            storage: Storage::new(database_path, read_sources)?,
             searcher: FuzzySearcher::new(),
             current_dir,
             session_id,
